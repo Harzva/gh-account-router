@@ -1,0 +1,4 @@
+interface:
+  display_name: "GH Account Router"
+  short_description: "Route GitHub work between Harzva and saiHao"
+  default_prompt: "Use $gh-account-router to choose the right GitHub account and publish this repository safely."
