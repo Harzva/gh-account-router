@@ -1,29 +1,32 @@
-# GH Account Router
+# GH Account Router Skill
 
-Route GitHub CLI work between multiple GitHub accounts without changing the global `gh` login.
+Codex Skill package for routing GitHub CLI work across multiple GitHub accounts.
 
-This repository publishes the `gh-account-router` Codex skill plus its helper script. It is designed for users who keep separate GitHub tokens for personal, organization, client, or lab accounts and want each `gh` command to run with the correct identity.
+## Skill Package
 
-## What It Does
+Install this repo as a skill from the `gh-account-router/` path:
 
-- Reads a private local token file.
-- Finds the requested account by alias.
-- Runs `gh` with `GH_TOKEN` set only for that child process.
-- Removes conflicting `GITHUB_TOKEN` from the child environment.
-- Redacts token-like strings from command output.
+```powershell
+python scripts/install-skill-from-github.py --repo Harzva/gh-account-router --path gh-account-router
+```
 
-## Files
+After installing, restart Codex so the new skill is discovered.
+
+## Repository Layout
 
 ```text
-SKILL.md                     Codex skill instructions
-scripts/gh_account_router.py CLI wrapper for GitHub account routing
-references/accounts.md       Account-file format reference
-agents/openai.yaml           Optional UI metadata
+gh-account-router/
+  SKILL.md
+  agents/openai.yaml
+  scripts/gh_account_router.py
+  references/accounts.md
 ```
+
+The root of this repository only contains packaging documentation and repository metadata. The actual skill is the `gh-account-router/` folder.
 
 ## Private Access File
 
-Do not commit this file. Store it outside the repository, for example:
+Do not commit tokens. Store account tokens outside this repository:
 
 ```text
 <github token for account A>
@@ -35,32 +38,18 @@ saihao
 3873225350
 ```
 
-Then configure the path:
+Set the path:
 
 ```powershell
 $env:GH_ACCOUNT_ROUTER_ACCESS_FILE = "D:\private\github-accounts.txt"
 ```
 
-Or pass it per command:
+Or pass it directly:
 
 ```powershell
-python .\scripts\gh_account_router.py --access-file D:\private\github-accounts.txt --account harzva -- api user --jq .login
-```
-
-## Examples
-
-```powershell
-python .\scripts\gh_account_router.py --list
-python .\scripts\gh_account_router.py --account harzva -- repo view Harzva/example
-python .\scripts\gh_account_router.py --account saihao -- api user --jq .login
-```
-
-Everything after `--` is passed directly to `gh`:
-
-```powershell
-python .\scripts\gh_account_router.py --account harzva -- repo create Harzva/new-repo --public
+python .\gh-account-router\scripts\gh_account_router.py --access-file D:\private\github-accounts.txt --account harzva -- api user --jq .login
 ```
 
 ## Safety
 
-Never commit tokens, `.env` files, credential dumps, or generated logs. This repository intentionally contains only the router code and documentation.
+This repository intentionally excludes `githubacess.txt`, `.env` files, token dumps, logs, and caches.
