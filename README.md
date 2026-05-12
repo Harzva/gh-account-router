@@ -1,18 +1,25 @@
-# GH Account Router Skill
+# GH Account Router
 
-Codex Skill package for routing GitHub CLI work across multiple GitHub accounts.
+用于在多个 GitHub 账号之间安全地路由 `gh` CLI 命令的 Skill 包。
 
-## Skill Package
+## 功能概览
 
-Install this repo as a skill from the `gh-account-router/` path:
+- 按账号别名选择对应 Token 执行 `gh` 命令
+- 仅对子进程注入 `GH_TOKEN`，不污染当前 shell
+- 自动脱敏输出中的 Token 字符串
+- 支持私有账号文件（不入库）
+
+## 快速开始
+
+从 `gh-account-router/` 路径安装 Skill：
 
 ```powershell
 python scripts/install-skill-from-github.py --repo Harzva/gh-account-router --path gh-account-router
 ```
 
-After installing, restart Codex so the new skill is discovered.
+安装后重启 Codex，使新 Skill 被发现。
 
-## Repository Layout
+## 仓库结构
 
 ```text
 gh-account-router/
@@ -22,11 +29,11 @@ gh-account-router/
   references/accounts.md
 ```
 
-The root of this repository only contains packaging documentation and repository metadata. The actual skill is the `gh-account-router/` folder.
+说明：仓库根目录主要是打包与说明文件，Skill 主体位于 `gh-account-router/` 目录。
 
-## Private Access File
+## 账号文件（私有）
 
-Do not commit tokens. Store account tokens outside this repository:
+不要提交 Token。请将账号文件存放在仓库外，例如：
 
 ```text
 <github token for account A>
@@ -38,18 +45,40 @@ saihao
 3873225350
 ```
 
-Set the path:
+配置环境变量：
 
 ```powershell
 $env:GH_ACCOUNT_ROUTER_ACCESS_FILE = "D:\private\github-accounts.txt"
 ```
 
-Or pass it directly:
+或在命令中显式传入：
 
 ```powershell
 python .\gh-account-router\scripts\gh_account_router.py --access-file D:\private\github-accounts.txt --account harzva -- api user --jq .login
 ```
 
-## Safety
+## 常用命令
 
-This repository intentionally excludes `githubacess.txt`, `.env` files, token dumps, logs, and caches.
+列出已配置账号别名：
+
+```powershell
+python .\gh-account-router\scripts\gh_account_router.py --list
+```
+
+用指定账号查询当前登录信息：
+
+```powershell
+python .\gh-account-router\scripts\gh_account_router.py --account saihao -- api user --jq .login
+```
+
+用指定账号查看仓库：
+
+```powershell
+python .\gh-account-router\scripts\gh_account_router.py --account saihao -- repo view saihao/REPO
+```
+
+## 安全说明
+
+- 不要在 README、提交记录、日志、Issue 或对话中粘贴 Token
+- 不要提交账号文件、`.env`、凭据转储、日志或缓存
+- 仅在确实需要鉴权时读取私有账号文件
