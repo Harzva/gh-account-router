@@ -59,6 +59,8 @@ python .\gh-account-router\scripts\gh_account_router.py --access-file D:\private
 
 ## 常用命令
 
+以下示例使用 `saihao` 账号，你也可以替换为 `harzva`。
+
 列出已配置账号别名：
 
 ```powershell
@@ -74,7 +76,7 @@ python .\gh-account-router\scripts\gh_account_router.py --account saihao -- api 
 用指定账号查看仓库：
 
 ```powershell
-python .\gh-account-router\scripts\gh_account_router.py --account saihao -- repo view saihao/REPO
+python .\gh-account-router\scripts\gh_account_router.py --account saihao -- repo view saihao/<repository-name>
 ```
 
 ## 安全说明
